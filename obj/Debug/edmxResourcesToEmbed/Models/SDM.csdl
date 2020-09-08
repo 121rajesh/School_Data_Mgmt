@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="School_data_mgtmModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Address">
+    <Key>
+      <PropertyRef Name="AdId" />
+    </Key>
+    <Property Name="AdId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Street" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="PostalCode" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Schools" Relationship="Self.FK_School_ToAddress" FromRole="Address" ToRole="School" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Users_ToAddress" FromRole="Address" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Document">
+    <Key>
+      <PropertyRef Name="DocId" />
+    </Key>
+    <Property Name="DocId" Type="Int32" Nullable="false" />
+    <Property Name="AdharNo" Type="Int64" />
+    <Property Name="PanNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="VoterId" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="DrivingLicence" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AdharUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PanUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="VoterUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="DrivingLicenceUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Users_ToDocument" FromRole="Document" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Users_ToRoles" FromRole="Roles" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="School">
+    <Key>
+      <PropertyRef Name="SchoolId" />
+    </Key>
+    <Property Name="SchoolId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SchoolName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Branch" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Principal" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="AdId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Address" Relationship="Self.FK_School_ToAddress" FromRole="School" ToRole="Address" />
+    <NavigationProperty Name="Users" Relationship="Self.FK_Users_ToSchool" FromRole="School" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="EmailId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ContactNo" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="BirthDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Qualifications" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Class" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="RoleId" Type="Int32" Nullable="false" />
+    <Property Name="AdId" Type="Int32" Nullable="false" />
+    <Property Name="SchoolId" Type="Int32" />
+    <Property Name="DisplayPicture" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DocId" Type="Int32" />
+    <NavigationProperty Name="Address" Relationship="Self.FK_Users_ToAddress" FromRole="Users" ToRole="Address" />
+    <NavigationProperty Name="Document" Relationship="Self.FK_Users_ToDocument" FromRole="Users" ToRole="Document" />
+    <NavigationProperty Name="Role" Relationship="Self.FK_Users_ToRoles" FromRole="Users" ToRole="Roles" />
+    <NavigationProperty Name="School" Relationship="Self.FK_Users_ToSchool" FromRole="Users" ToRole="School" />
+  </EntityType>
+  <Association Name="FK_School_ToAddress">
+    <End Role="Address" Type="Self.Address" Multiplicity="1" />
+    <End Role="School" Type="Self.School" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="AdId" />
+      </Principal>
+      <Dependent Role="School">
+        <PropertyRef Name="AdId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_ToAddress">
+    <End Role="Address" Type="Self.Address" Multiplicity="1" />
+    <End Role="Users" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="AdId" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="AdId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_ToDocument">
+    <End Role="Document" Type="Self.Document" Multiplicity="0..1" />
+    <End Role="Users" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Document">
+        <PropertyRef Name="DocId" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="DocId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_ToRoles">
+    <End Role="Roles" Type="Self.Role" Multiplicity="1" />
+    <End Role="Users" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Users_ToSchool">
+    <End Role="School" Type="Self.School" Multiplicity="0..1" />
+    <End Role="Users" Type="Self.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="School">
+        <PropertyRef Name="SchoolId" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="SchoolId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="School_Data_MgtmEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Addresses" EntityType="Self.Address" />
+    <EntitySet Name="Documents" EntityType="Self.Document" />
+    <EntitySet Name="Roles" EntityType="Self.Role" />
+    <EntitySet Name="Schools" EntityType="Self.School" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="FK_School_ToAddress" Association="Self.FK_School_ToAddress">
+      <End Role="Address" EntitySet="Addresses" />
+      <End Role="School" EntitySet="Schools" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_ToAddress" Association="Self.FK_Users_ToAddress">
+      <End Role="Address" EntitySet="Addresses" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_ToDocument" Association="Self.FK_Users_ToDocument">
+      <End Role="Document" EntitySet="Documents" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_ToRoles" Association="Self.FK_Users_ToRoles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Users_ToSchool" Association="Self.FK_Users_ToSchool">
+      <End Role="School" EntitySet="Schools" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
